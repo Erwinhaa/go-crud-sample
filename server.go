@@ -4,6 +4,7 @@ import (
 	"os"
 
 	"myapp/config"
+	"myapp/middlewares"
 	"myapp/routes"
 
 	"github.com/gin-gonic/gin"
@@ -19,6 +20,7 @@ func main() {
 	}
 
 	router := gin.New()
+	router.Use(middlewares.AuthMiddleware())
 
 	config.ConnectDB()
 	db := config.GetDB()

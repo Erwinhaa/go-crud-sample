@@ -46,3 +46,45 @@ func (controller *PostController) CreatePost(ctx *gin.Context) {
 		Data:   post,
 	})
 }
+
+func (controller *PostController) UpdatePost(ctx *gin.Context) {
+	var input models.PostInput
+
+	ctx.ShouldBind(&input)
+	ctx.ShouldBindUri(&input)
+
+	s := services.GetTransaction()
+
+	post, err := s.UpdatePost(ctx, input)
+
+	s.Commit()
+
+	if err != nil {
+		panic(err)
+	}
+
+	ctx.JSON(http.StatusOK, models.PostPublicReturn{
+		Status: true,
+		Data: &models.PostReturn{
+			ID:    post.ID,
+			Title: post.Title,
+			Body:  post.Body,
+		},
+	})
+}
+
+func (controllers *PostController) DeletePost(ctx *gin.Context) {
+	var post models.Post
+	s := services.GetTransaction()
+
+	ctx.ShouldBindUri(&post)
+
+	message, err := s.DeletePost(ctx, &post)
+	if err != nil {
+		ctx.AbortWithError(http.StatusBadRequest, err)
+	}
+
+	s.Commit()
+
+	ctx.JSON(http.StatusOK, message)
+}

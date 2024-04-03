@@ -1,13 +1,22 @@
 package models
 
 type Post struct {
-	ID    int64  `json:"id"`
-	Title string `json:"title"`
-	Body  string `json:"body"`
+	ID     int    `uri:"id" json:"id"`
+	Title  string `json:"title"`
+	Body   string `json:"body"`
+	UserId int    `json:"user_id"`
+	User   User
 }
 
 type PostReturn struct {
-	ID    int64  `json:"id"`
+	ID     int    `json:"id"`
+	Title  string `json:"title"`
+	Body   string `json:"body"`
+	UserId int    `json:"user_id"`
+}
+
+type PostInput struct {
+	ID    string `uri:"id" json:"id"`
 	Title string `json:"title"`
 	Body  string `json:"body"`
 }
